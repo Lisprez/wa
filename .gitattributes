@@ -1,0 +1,2 @@
+pkg/3rdparty/* linguist-vendored
+*.wa linguist-language=Go
