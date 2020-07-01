@@ -1,44 +1,33 @@
-// 凹语言 版权 @2019 柴树杉 & 丁尔男。保留所有权利。
+// 版权 @2019 凹语言 作者。保留所有权利。
 
 // +build ignore
 
 package main
 
 import (
-	"fmt"
+	"log"
 	"os"
 
-	"github.com/wa-lang/wa/pkg/wascript"
+	"github.com/wa-lang/wa"
 )
 
 func main() {
-	ctx := wascript.DefaultContext()
+	app := wa.NewScript().MustLoad("hello.wa", `
+		package main
 
-	ctx.FileSystem["myapp"] = map[string]string{
-		"_hello.wa": `
-			package main
+		func main() {
+			println("你好, 凹语言!")
 
-			func main() {
-				println("你好, 凹语言!")
-
-				var sum int
-				for i := 1; i <= 100; i++ {
-					sum += i
-				}
-
-				println(sum)
+			var sum int
+			for i := 1; i <= 100; i++ {
+				sum += i
 			}
-		`,
-	}
 
-	program, err := wascript.LoadProgram(ctx, "myapp")
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
+			println(sum)
+		}
+	`)
 
-	if err = program.Run(); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+	if err := app.Run(os.Args[1:]...); err != nil {
+		log.Fatal(err)
 	}
 }

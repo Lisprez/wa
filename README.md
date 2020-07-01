@@ -14,17 +14,9 @@
 +------------+
 ```
 
-## 项目进展
-
-目前基本的测试凹程序例子已经可以嵌入Go语言环境运行。API接口还有待设计优化和完善。
-
-项目的代码会在合适的时候公布。
-
-<!--
 ## 安装环境
 
-1. `go get github.com/wa-lang/wa`
--->
+1. `go get github.com/wa-lang/wa/cmd/wa`
 
 ## 运行例子(命令行)
 
@@ -59,41 +51,30 @@ $ wa run-script _hello.wa
 package main
 
 import (
-	"fmt"
+	"log"
 	"os"
 
-	"github.com/wa-lang/wa/pkg/wascript"
+	"github.com/wa-lang/wa"
 )
 
 func main() {
-	ctx := wascript.DefaultContext()
+	app := wa.NewScript().MustLoad("hello.wa", `
+		package main
 
-	ctx.FileSystem["myapp"] = map[string]string{
-		"_hello.wa": `
-			package main
+		func main() {
+			println("你好, 凹语言!")
 
-			func main() {
-				println("你好, 凹语言!")
-
-				var sum int
-				for i := 1; i <= 100; i++ {
-					sum += i
-				}
-
-				println(sum)
+			var sum int
+			for i := 1; i <= 100; i++ {
+				sum += i
 			}
-		`,
-	}
 
-	program, err := wascript.LoadProgram(ctx, "myapp")
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
+			println(sum)
+		}
+	`)
 
-	if err = program.Run(); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+	if err := app.Run(os.Args[1:]...); err != nil {
+		log.Fatal(err)
 	}
 }
 ```
@@ -108,4 +89,4 @@ $ go run hello.go
 
 ## 版权
 
-凹语言 版权 @2019 柴树杉 & 丁尔男 & 史斌。保留所有权利。
+版权 @2019 凹语言 作者。保留所有权利。
